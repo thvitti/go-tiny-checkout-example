@@ -51,7 +51,7 @@ func home(w http.ResponseWriter, r *http.Request) {
 	valid := coupons.Check(coupon)
 
 	result := Result{Status: valid}
-	fmt.Println("=== 01", result)
+
 	jsonResult, err := json.Marshal(result)
 	if err != nil {
 		log.Fatal("Error convering json")
