@@ -9,6 +9,8 @@ import (
 	"net/http"
 	"net/url"
 	"os"
+
+	"github.com/hashicorp/go-retryablehttp"
 )
 
 type Result struct {
@@ -59,7 +61,10 @@ func makeHttpCall(urlMicroservice, coupon, ccNumber string) Result {
 	values.Add("coupon", coupon)
 	values.Add("ccNumber", ccNumber)
 
-	res, err := http.PostForm(urlMicroservice, values)
+	retryClient := retryablehttp.NewClient()
+	retryClient.RetryMax = 5
+
+	res, err := retryClient.PostForm(urlMicroservice, values)
 	if err != nil {
 		msg := "PAYMENT SERVICE OUT"
 		log.Println(msg)
